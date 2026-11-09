@@ -1,0 +1,188 @@
+{
+  "version": "1.0.0",
+  "model_name": "Tuned_LightGBM",
+  "trained_at": "2026-11-01T12:05:42.715796+00:00",
+  "train_samples": 7550,
+  "val_samples": 2176,
+  "test_samples": 1690,
+  "feature_count": 49,
+  "feature_names": [
+    "length_url",
+    "length_hostname",
+    "length_path",
+    "nb_dots",
+    "nb_hyphens",
+    "nb_at",
+    "nb_qm",
+    "nb_and",
+    "nb_or",
+    "nb_eq",
+    "nb_underscore",
+    "nb_tilde",
+    "nb_percent",
+    "nb_slash",
+    "nb_colon",
+    "nb_semicolon",
+    "nb_dollar",
+    "nb_space",
+    "nb_www",
+    "nb_com",
+    "nb_dslash",
+    "http_in_path",
+    "https_token",
+    "ratio_digits_url",
+    "ratio_digits_host",
+    "entropy_url",
+    "entropy_host",
+    "has_ip",
+    "has_https",
+    "has_port",
+    "has_userinfo",
+    "nb_subdomains",
+    "length_subdomain",
+    "nb_path_segments",
+    "has_punycode",
+    "is_shortener",
+    "length_registered_domain",
+    "tld_in_subdomain",
+    "tld_in_path",
+    "nb_sensitive_words",
+    "has_sensitive_word",
+    "nb_auth_words",
+    "nb_finance_words",
+    "nb_urgency_words",
+    "min_brand_edit_distance",
+    "is_typosquatting",
+    "brand_in_subdomain",
+    "brand_in_path",
+    "is_malformed"
+  ],
+  "best_hyperparameters": {
+    "subsample": 0.75,
+    "reg_lambda": 0.5,
+    "reg_alpha": 0.0,
+    "num_leaves": 31,
+    "n_estimators": 200,
+    "min_child_samples": 20,
+    "max_depth": 8,
+    "learning_rate": 0.03,
+    "colsample_bytree": 0.85
+  },
+  "best_cv_f1_score": 0.8857044835433747,
+  "threshold_config": {
+    "low_risk_upper": 0.35,
+    "high_risk_lower": 0.7,
+    "default_decision_threshold": 0.5,
+    "optimal_f1_threshold": 0.63
+  },
+  "metrics_validation": {
+    "accuracy": 0.7922794117647058,
+    "precision": 0.7293934681181959,
+    "recall": 0.9001919385796545,
+    "f1": 0.8058419243986255,
+    "fpr": 0.30687830687830686,
+    "roc_auc": 0.9100537563429438,
+    "pr_auc": 0.9040715843327163,
+    "brier_score": 0.1319730846678484,
+    "tn": 786,
+    "fp": 348,
+    "fn": 104,
+    "tp": 938
+  },
+  "metrics_test": {
+    "accuracy": 0.8810650887573964,
+    "precision": 0.8585247883917775,
+    "recall": 0.8942065491183879,
+    "f1": 0.8760024676125848,
+    "fpr": 0.13058035714285715,
+    "roc_auc": 0.9519428638898885,
+    "pr_auc": 0.9447313066706264,
+    "brier_score": 0.08771390877274678,
+    "tn": 779,
+    "fp": 117,
+    "fn": 84,
+    "tp": 710
+  },
+  "top_features": [
+    {
+      "feature": "length_path",
+      "importance": 524.0
+    },
+    {
+      "feature": "entropy_url",
+      "importance": 453.0
+    },
+    {
+      "feature": "nb_hyphens",
+      "importance": 402.0
+    },
+    {
+      "feature": "length_url",
+      "importance": 396.0
+    },
+    {
+      "feature": "ratio_digits_url",
+      "importance": 377.0
+    },
+    {
+      "feature": "length_subdomain",
+      "importance": 337.0
+    },
+    {
+      "feature": "entropy_host",
+      "importance": 336.0
+    },
+    {
+      "feature": "nb_slash",
+      "importance": 314.0
+    },
+    {
+      "feature": "length_registered_domain",
+      "importance": 304.0
+    },
+    {
+      "feature": "length_hostname",
+      "importance": 280.0
+    },
+    {
+      "feature": "nb_dots",
+      "importance": 221.0
+    },
+    {
+      "feature": "min_brand_edit_distance",
+      "importance": 198.0
+    },
+    {
+      "feature": "nb_underscore",
+      "importance": 189.0
+    },
+    {
+      "feature": "nb_path_segments",
+      "importance": 170.0
+    },
+    {
+      "feature": "nb_com",
+      "importance": 163.0
+    },
+    {
+      "feature": "ratio_digits_host",
+      "importance": 129.0
+    },
+    {
+      "feature": "nb_subdomains",
+      "importance": 119.0
+    },
+    {
+      "feature": "nb_www",
+      "importance": 114.0
+    },
+    {
+      "feature": "has_https",
+      "importance": 114.0
+    },
+    {
+      "feature": "nb_sensitive_words",
+      "importance": 104.0
+    }
+  ]
+}

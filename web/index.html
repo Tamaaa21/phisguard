@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard — Detektor Link Phishing Berbasis AI</title>
+  <meta name="description" content="Periksa apakah sebuah link aman atau phishing menggunakan model Machine Learning pada 49 fitur URL string tanpa membuka situs target.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-name">PhishGuard</span>
+          <span class="brand-badge">ML v1</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#scanner">Cek Link</a></li>
+          <li><a href="#modus">Kasus Indonesia</a></li>
+          <li><a href="#diagnostik">Pilar Deteksi</a></li>
+          <li><a href="#tentang">Tentang Sistem</a></li>
+        </ul>
+      </nav>
+
+      <div class="model-status-pill">
+        <span class="status-dot"></span>
+        <span id="headerVersionText">Model v1.0.0 Online</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- Top Interactive Scanner Area -->
+    <section class="scanner-section" id="scanner">
+      <div class="container">
+        <div class="scanner-hero-wrapper">
+          <div class="scanner-tagline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            Detektor Cepat & Aman (Zero-SSRF)
+          </div>
+
+          <h1 class="scanner-title">Periksa Keamanan Link Sebelum Anda Mengkliknya</h1>
+          <p class="scanner-desc">
+            Sistem menganalisis 49 fitur <em>lexical</em>, struktur domain, dan kemiripan merek secara <em>real-time</em> menggunakan model machine learning. Sistem tidak membuka atau mengunduh isi halaman web target.
+          </p>
+
+          <!-- Input Form -->
+          <form class="scanner-form" id="scanForm">
+            <div class="input-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              id="urlInput" 
+              class="url-input" 
+              placeholder="Tempel URL di sini... (contoh: http://bca-verifikasi-akun.xyz/login)" 
+              autocomplete="off" 
+              required
+            >
+            <button type="submit" class="btn-scan" id="btnScan">
+              <span id="btnText">Periksa Link</span>
+              <span id="btnSpinner" class="spinner" style="display:none; width:18px; height:18px; border-width:2px; margin:0;"></span>
+            </button>
+          </form>
+
+          <!-- Example Chips -->
+          <div class="example-chips-wrap">
+            <span class="example-chips-label">Contoh Cepat:</span>
+            <button type="button" class="example-chip" data-url="https://bankmandiri.co.id/personal">
+              <span class="chip-tag-safe">Aman</span> bankmandiri.co.id
+            </button>
+            <button type="button" class="example-chip" data-url="http://paypal.com.verification-security-update.xyz/login?token=98472">
+              <span class="chip-tag-phish">Waspada</span> paypal.com.verification...
+            </button>
+            <button type="button" class="example-chip" data-url="http://klikbca-login.bank-secure.id/masuk">
+              <span class="chip-tag-phish">Phishing Indo</span> bca-login.bank-secure.id
+            </button>
+          </div>
+
+          <!-- Loading Box -->
+          <div class="loading-box" id="loadingBox">
+            <div class="spinner"></div>
+            <p style="font-weight:600; color:var(--accent);">Mengekstrak 49 Fitur & Menjalankan Model...</p>
+            <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Memeriksa struktur host, entropi karakter, dan kemiripan merek.</p>
+          </div>
+
+          <!-- Error Alert Box -->
+          <div class="error-box" id="errorBox">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span id="errorMessage">URL tidak valid.</span>
+          </div>
+
+          <!-- Result Container -->
+          <div class="result-container" id="resultContainer">
+            <div class="result-card">
+              <!-- Result Header -->
+              <div class="result-header" id="resultHeader">
+                <div class="result-status-wrap">
+                  <div class="result-icon-badge" id="resultIcon"></div>
+                  <div class="result-title-group">
+                    <h3 id="resultTitle">RISIKO RENDAH (TERLIHAT AMAN)</h3>
+                    <p id="resultSubtitle">Analisis diagnostik selesai.</p>
+                  </div>
+                </div>
+                <div class="result-score-badge">
+                  <div class="score-number" id="resultScore">0.0%</div>
+                  <div class="score-caption" id="resultScoreCaption">Probabilitas Phishing</div>
+                </div>
+              </div>
+
+              <!-- Result Body -->
+              <div class="result-body">
+                <!-- Strict Plaintext Display (NEVER A CLICKABLE LINK) -->
+                <div class="inspected-url-box">
+                  <div class="url-box-label">
+                    <span>Tautan yang Diperiksa (Teks Biasa)</span>
+                    <span class="non-clickable-notice">🔒 Non-Clickable untuk Keamanan</span>
+                  </div>
+                  <div class="inspected-url-text" id="resultUrl"></div>
+                </div>
+
+                <!-- Reasons -->
+                <div class="reasons-section">
+                  <div class="reasons-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="16" x2="12" y2="12"/>
+                      <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    Faktor Alasan & Temuan Diagnostik:
+                  </div>
+                  <ul class="reasons-list" id="reasonsList"></ul>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="disclaimer-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:2px;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                  <div>
+                    <strong style="color:var(--accent);">Disclaimer Keamanan:</strong>
+                    <span id="resultDisclaimer">Hasil ini merupakan perkiraan probabilitas model ML dan bukan jaminan mutlak.</span>
+                    <span id="modelVersionPill" style="display:inline-block; margin-left:8px; font-family:var(--font-mono); font-size:11px; color:var(--text-tertiary-alt);">Versi Model: 1.0.0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Visual Case Comparison: Real World Modus in Indonesia -->
+    <section class="section-modus" id="modus">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-badge">Edukasi Keamanan Digital</span>
+          <h2 class="section-title">Modus Phishing Nyata di Indonesia</h2>
+          <p class="section-desc">
+            Pelaku penipuan sering meniru merek terpercaya dengan merekayasa subdomain atau memakai nama domain tiruan (typosquatting). Perhatikan perbedaannya:
+          </p>
+        </div>
+
+        <div class="cases-grid">
+          <!-- Case 1 -->
+          <div class="case-card">
+            <div>
+              <div class="case-category">Perbankan Digital</div>
+              <h4>Modus Pembaruan Akun Bank</h4>
+              <div class="comparison-box">
+                <div class="comp-item safe">
+                  <span class="comp-label">✓ Resmi (Asli)</span>
+                  https://www.klikbca.com/
+                </div>
+                <div class="comp-item phish">
+                  <span class="comp-label">✕ Jebakan Phishing</span>
+                  http://klikbca-login.bank-secure.id/
+                </div>
+              </div>
+            </div>
+            <p class="case-note">
+              <strong>Ciri:</strong> Nama bank disematkan sebagai kata kunci pada domain baru yang tidak terdaftar atas nama bank.
+            </p>
+          </div>
+
+          <!-- Case 2 -->
+          <div class="case-card">
+            <div>
+              <div class="case-category">Dompet Digital / E-Wallet</div>
+              <h4>Modus Klaim Saldo & Hadiah</h4>
+              <div class="comparison-box">
+                <div class="comp-item safe">
+                  <span class="comp-label">✓ Resmi (Asli)</span>
+                  https://www.dana.id/
+                </div>
+                <div class="comp-item phish">
+                  <span class="comp-label">✕ Jebakan Phishing</span>
+                  http://dana-id.klaim-saldo.xyz/bayar
+                </div>
+              </div>
+            </div>
+            <p class="case-note">
+              <strong>Ciri:</strong> Memakai TLD murah (.xyz/.top) dan kata iming-iming hadiah atau saldo darurat.
+            </p>
+          </div>
+
+          <!-- Case 3 -->
+          <div class="case-card">
+            <div>
+              <div class="case-category">Jasa Ekspedisi / Kurir</div>
+              <h4>Modus Lacak Paket Tertahan</h4>
+              <div class="comparison-box">
+                <div class="comp-item safe">
+                  <span class="comp-label">✓ Resmi (Asli)</span>
+                  https://www.jne.co.id/
+                </div>
+                <div class="comp-item phish">
+                  <span class="comp-label">✕ Jebakan Phishing</span>
+                  http://lacak-paket-jne.tracking-resikirim.com/
+                </div>
+              </div>
+            </div>
+            <p class="case-note">
+              <strong>Ciri:</strong> Menggiring korban untuk memasukkan nomor telepon dan kode OTP SMS.
+            </p>
+          </div>
+
+          <!-- Case 4 -->
+          <div class="case-card">
+            <div>
+              <div class="case-category">Marketplace & E-Commerce</div>
+              <h4>Modus Verifikasi Toko / Undian</h4>
+              <div class="comparison-box">
+                <div class="comp-item safe">
+                  <span class="comp-label">✓ Resmi (Asli)</span>
+                  https://shopee.co.id/
+                </div>
+                <div class="comp-item phish">
+                  <span class="comp-label">✕ Jebakan Phishing</span>
+                  http://shopee-undian-pemenang.top/klaim
+                </div>
+              </div>
+            </div>
+            <p class="case-note">
+              <strong>Ciri:</strong> Menggunakan domain tidak lazim dengan menyisipkan kata 'undian' dan 'pemenang'.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Diagnostic Pillars -->
+    <section class="section-diagnostic" id="diagnostik">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-badge">Arsitektur Machine Learning</span>
+          <h2 class="section-title">4 Pilar Fitur yang Dianalisis</h2>
+          <p class="section-desc">
+            Model LightGBM terlatih mengevaluasi 49 indikator statistik dan struktural tanpa perlu membuka tautan.
+          </p>
+        </div>
+
+        <div class="pillars-grid">
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 7 4 4 20 4 20 7"/>
+                <line x1="9" y1="20" x2="15" y2="20"/>
+                <line x1="12" y1="4" x2="12" y2="20"/>
+              </svg>
+            </div>
+            <h4>1. Karakteristik Lexical</h4>
+            <p>Panjang total URL, panjang hostname dan path, jumlah tanda hubung (-), titik (.), rasio digit angka, serta tingkat keacakan karakter (Shannon Entropy).</p>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
+            <h4>2. Deteksi Merek & Typosquatting</h4>
+            <p>Jarak edit (Levenshtein) terhadap 32 merek teratas global dan Indonesia, serta deteksi penipuan nama merek yang ditaruh di subdomain.</p>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h4>3. Struktur Host & Keamanan</h4>
+            <p>Inspeksi protokol HTTPS, pemakaian alamat IP langsung (IPv4/hex), layanan pemendek tautan (URL Shortener), dan karakter Punycode.</p>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-icon-box">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <h4>4. Kata Kunci Sensitif (Bilingual)</h4>
+            <p>Kamus sensitif mencakup kata sandi, akun, verifikasi, perbankan, saldo, darurat, pemblokiran, dan bayar dalam Bahasa Indonesia dan Inggris.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: About & Limitations -->
+    <section class="section-about" id="tentang">
+      <div class="container">
+        <div class="about-card">
+          <div class="about-grid">
+            <div class="about-col">
+              <h4>Cara Kerja PhishGuard</h4>
+              <p>
+                PhishGuard dirancang sebagai lapis pertahanan dini terhadap kejahatan siber berbasis tautan palsu.
+                Model telah dilatih dan divalidasi pada ribuan domain independen dengan metodologi pemisahan domain ketat (<em>zero domain leakage</em>).
+              </p>
+              <ul style="margin-top:12px;">
+                <li><strong>Akurasi Test Set:</strong> 88.11% pada 1.690 sampel uji baru.</li>
+                <li><strong>Area Under Curve (ROC-AUC):</strong> 0.9519.</li>
+                <li><strong>Kecepatan Prediksi:</strong> &lt; 10 milidetik per URL.</li>
+              </ul>
+            </div>
+
+            <div class="about-col">
+              <h4>Keterbatasan & Panduan Aman</h4>
+              <p>
+                Sebagai sistem v1 yang mengutamakan kecepatan dan keamanan (tidak membuka halaman target untuk menghindari risiko SSRF):
+              </p>
+              <ul style="margin-top:12px;">
+                <li>Model hanya mengevaluasi pola string URL, bukan isi halaman atau sertifikat TLS terkini.</li>
+                <li>Situs sah yang baru dibuat atau memiliki subdomain kompleks terkadang dapat diklasifikasikan sebagai <em>Medium Risk</em>.</li>
+                <li><strong>Jangan pernah</strong> membagikan kode OTP, PIN perbankan, atau password pada link dari pengirim yang tidak dikenal.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          PhishGuard — ML URL Phishing Detector
+        </div>
+        <div class="footer-disclaimer-note">
+          Tautan yang dimasukkan hanya dianalisis untuk kebutuhan inferensi dan tidak disimpan secara permanen demi menjaga privasi pengguna.
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 PhishGuard. Dikembangkan untuk edukasi dan riset keamanan siber Indonesia.</div>
+        <div>Inference Engine: LightGBM Tabular Classifier v1.0.0</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #090d16;
+  --background-alt: #0f172a;
+  --background-3: #1e293b;
+  --surface: #131d33;
+  --surface-alt: #1c2b48;
+  --surface-3: #24365d;
+  --surface-4: #451a1a;
+  --surface-green: #064e3b;
+  --surface-amber: #451a03;
+
+  --accent: #38bdf8;
+  --accent-alt: #ef4444; /* Danger / Red */
+  --accent-3: #2563eb;   /* Primary Blue */
+  --accent-4: #10b981;   /* Success / Green */
+  --accent-amber: #f59e0b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-fast {
+  animation: spin 0.8s linear infinite;
+}

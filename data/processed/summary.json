@@ -1,0 +1,39 @@
+{
+  "raw_samples": 11430,
+  "invalid_urls_removed": 0,
+  "duplicates_removed": 14,
+  "clean_samples": 11416,
+  "unique_domains": 6634,
+  "splits": {
+    "train": {
+      "count": 7550,
+      "ratio": 0.6613524877365101,
+      "phishing": 3865,
+      "legitimate": 3685,
+      "phishing_ratio": 0.5119205298013245,
+      "unique_domains": 4466
+    },
+    "val": {
+      "count": 2176,
+      "ratio": 0.19060967063770148,
+      "phishing": 1042,
+      "legitimate": 1134,
+      "phishing_ratio": 0.4788602941176471,
+      "unique_domains": 1085
+    },
+    "test": {
+      "count": 1690,
+      "ratio": 0.14803784162578837,
+      "phishing": 794,
+      "legitimate": 896,
+      "phishing_ratio": 0.46982248520710057,
+      "unique_domains": 1083
+    }
+  },
+  "leakage_check": {
+    "train_val_overlap": 0,
+    "train_test_overlap": 0,
+    "val_test_overlap": 0,
+    "status": "passed"
+  }
+}
